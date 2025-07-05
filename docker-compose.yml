@@ -78,12 +78,12 @@ services:
     # volumes:
     #   - ./proto:/proto
     environment:
-      DATABASE_URL: "mysql://root:rootpassword@localhost:3306/mydatabase"
+      DATABASE_URL: "mysql://root:rootpassword@mariadb-users:3306/mydatabase"
       PORT: 3002
       NODE_ENV: development
       JWT_SECRET: amongus
       SERVER_URL: auth
-      DATABASE_URL_POSTGRES: "postgres://auth:authpass@localhost:5432/auth-db"
+      DATABASE_URL_POSTGRES: "postgres://auth:authpass@postgres-auth:5432/auth-db"
     ports:
       - "3002:3002"
 
@@ -99,7 +99,7 @@ services:
       PORT: 3003
       NODE_ENV: development
       JWT_SECRET: amongus
-      DATABASE_URL: "mysql://root:rootpassword@localhost:3306/mydatabase"
+      DATABASE_URL: "mysql://root:rootpassword@mariadb-users:3306/mydatabase"
       SERVER_URL: usuarios
     ports:
     - "3003:3003"
@@ -116,7 +116,7 @@ services:
       NODE_ENV: development
       JWT_SECRET: amongus
       SERVER_URL: facturacion
-      DATABASE_URL_2: "mysql://root:rootpassword@localhost:3307/bill-db"
+      DATABASE_URL_2: "mysql://root:rootpassword@mariadb-bill:3307/bill-db"
     ports:
     - "3005:3005"
 
@@ -129,7 +129,7 @@ services:
     # volumes:
     #   - ./proto:/proto
     environment:
-      MONGO_DATABASE: "mongodb://admin:root@mongodb-videos:27017"
+      MONGO_DATABASE: "mongodb://admin:root@mongodb-videos:27017/db?authSource=admin"
       PORT: 3000
       NODE_ENV: development
       JWT_SECRET: amongus
@@ -148,7 +148,7 @@ services:
     # volumes:
     #   - ./proto:/proto
     environment:
-      MONGO_DATABASE: "mongodb://admin:root@localhost:27019"
+      MONGO_DATABASE: "mongodb://admin:root@mongodb-interactions:27019/db?authSource=admin"
       PORT: 3004
       NODE_ENV: development
       JWT_SECRET: amongus
@@ -170,7 +170,7 @@ services:
       PORT: 3006
       NODE_ENV: development
       JWT_SECRET: amongus
-      MONGO_DATABASE: "mongodb://admin:root@localhost:27017"
+      MONGO_DATABASE: "mongodb://admin:root@mongodb-logs:27018/db?authSource=admin"
       MONGO_PASSWORD: "root@"
       MONGO_USER: "admin:"
       SERVER_URL: environment
