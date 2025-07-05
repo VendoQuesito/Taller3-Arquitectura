@@ -1,0 +1,23 @@
+# Imagen base oficial de Node.js
+FROM node:20
+
+# Establece el directorio de trabajo dentro del contenedor
+WORKDIR /app
+
+# Copia los archivos del proyecto al contenedor
+COPY . .
+
+# Instala las dependencias del proyecto
+RUN npm install
+
+# Genera el cliente de Prisma
+RUN npx prisma generate --schema=prisma/mariadb/schema.prisma
+
+# Realiza el push de la base de datos
+# RUN npx prisma db push --schema=prisma/mariadb/schema.prisma
+
+# Expone el puerto donde corre la aplicación
+EXPOSE 3003
+
+# Comando para iniciar la app
+CMD ["npm", "start"]

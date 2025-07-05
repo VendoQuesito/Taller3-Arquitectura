@@ -1,0 +1,248 @@
+version: '3.9'
+
+services:
+  # Bases de datos
+  postgres-auth:
+    image: postgres:latest
+    container_name: postgres-auth
+    restart: always
+    environment:
+      POSTGRES_DB: auth-db
+      POSTGRES_USER: auth
+      POSTGRES_PASSWORD: authpass
+    ports:
+    - "5432:5432"
+
+  mariadb-bill:
+    image: mariadb:latest
+    container_name: mariadb-bill
+    restart: always
+    environment:
+      MYSQL_ROOT_PASSWORD: rootpassword
+      MYSQL_DATABASE: bill-db
+      MYSQL_USER: user
+      MYSQL_PASSWORD: factpass
+    ports:
+    - "3307:3306"
+
+
+  mariadb-users:
+    image: mariadb:latest
+    container_name: mariadb-users
+    restart: always
+    environment:
+      MYSQL_ROOT_PASSWORD: rootpassword
+      MYSQL_DATABASE: mydatabase
+      MYSQL_USER: user
+      MYSQL_PASSWORD: userpassword
+    ports:
+            - "3306:3306"
+
+  mongodb-videos:
+    image: mongo:latest
+    container_name: mongodb-videos
+    restart: always
+    environment:
+      MONGO_INITDB_ROOT_USERNAME: admin
+      MONGO_INITDB_ROOT_PASSWORD: root
+    ports:
+        - "27017:27017"
+
+  mongodb-interactions:
+    image: mongo:latest
+    container_name: mongodb-interactions
+    restart: always
+    environment:
+      MONGO_INITDB_ROOT_USERNAME: admin
+      MONGO_INITDB_ROOT_PASSWORD: root
+    ports:
+    - "27019:27017"
+    
+
+  mongodb-logs:
+    image: mongo:latest
+    container_name: mongodb-logs
+    restart: always
+    environment:
+      MONGO_INITDB_ROOT_USERNAME: admin
+      MONGO_INITDB_ROOT_PASSWORD: root
+    ports:
+    - "27018:27017"
+
+  # Microservicios
+  auth:
+    build: ./Autenticacion
+    container_name: auth
+    depends_on:
+      - postgres-auth
+    # volumes:
+    #   - ./proto:/proto
+    environment:
+      DATABASE_URL: "mysql://root:rootpassword@localhost:3306/mydatabase"
+      PORT: 3002
+      NODE_ENV: development
+      JWT_SECRET: amongus
+      SERVER_URL: auth
+      DATABASE_URL_POSTGRES: "postgres://auth:authpass@localhost:5432/auth-db"
+    ports:
+      - "3002:3002"
+
+
+  usuarios:
+    build: ./Usuarios
+    container_name: usuarios
+    depends_on:
+      - mariadb-users
+    # volumes:
+    #   - ./proto:/proto
+    environment:
+      PORT: 3003
+      NODE_ENV: development
+      JWT_SECRET: amongus
+      DATABASE_URL: "mysql://root:rootpassword@localhost:3306/mydatabase"
+      SERVER_URL: usuarios
+    ports:
+    - "3003:3003"
+
+  facturacion:
+    build: ./Bills
+    container_name: facturacion
+    depends_on:
+      - mariadb-bill
+    # volumes:
+    #   - ./proto:/proto
+    environment:
+      PORT: 3005
+      NODE_ENV: development
+      JWT_SECRET: amongus
+      SERVER_URL: facturacion
+      DATABASE_URL_2: "mysql://root:rootpassword@localhost:3307/bill-db"
+    ports:
+    - "3005:3005"
+
+
+  videos:
+    build: ./Videos
+    container_name: videos
+    depends_on:
+      - mongodb-videos
+    # volumes:
+    #   - ./proto:/proto
+    environment:
+      MONGO_DATABASE: "mongodb://admin:root@mongodb-videos:27017"
+      PORT: 3000
+      NODE_ENV: development
+      JWT_SECRET: amongus
+      MONGO_PASSWORD: "root@"
+      MONGO_USER: "admin:"
+      SERVER_URL: "videos"
+    ports:
+      - "3000:3000"
+
+
+  interacciones:
+    build: ./InteraccionSocial
+    container_name: interacciones
+    depends_on:
+      - mongodb-interactions
+    # volumes:
+    #   - ./proto:/proto
+    environment:
+      MONGO_DATABASE: "mongodb://admin:root@localhost:27019"
+      PORT: 3004
+      NODE_ENV: development
+      JWT_SECRET: amongus
+      MONGO_PASSWORD: "root@"
+      MONGO_USER: "admin:"
+      MONGO_DATABASE2: "mongodb://localhost:27017/"
+      SERVER_URL: "interacciones"
+    ports:
+      - "3004:3004"
+
+  logs:
+    build: ./Monitoreo
+    container_name: logs
+    depends_on:
+      - mongodb-logs
+    # volumes:
+    #   - ./proto:/proto
+    environment:
+      PORT: 3006
+      NODE_ENV: development
+      JWT_SECRET: amongus
+      MONGO_DATABASE: "mongodb://admin:root@localhost:27017"
+      MONGO_PASSWORD: "root@"
+      MONGO_USER: "admin:"
+      SERVER_URL: environment
+    ports:
+      - "3006:3006"
+
+  # 3 Réplicas de API Gateway
+  apigateway1:
+    build: ./Gateway
+    container_name: apigateway1
+    environment:
+      - PORT=3001
+    # volumes:
+    #   - ./proto:/proto
+    depends_on:
+      - auth
+      - usuarios
+      - videos
+
+
+  apigateway2:
+    build: ./Gateway
+    container_name: apigateway2
+    environment:
+      - PORT=3008
+    # volumes:
+    #   - ./proto:/proto
+    depends_on:
+      - auth
+      - usuarios
+      - videos
+
+  apigateway3:
+    build: ./Gateway
+    container_name: apigateway3
+    environment:
+      - PORT=3009
+    # volumes:
+    #   - ./proto:/proto
+    depends_on:
+      - auth
+      - usuarios
+      - videos
+
+
+  # NGINX (balanceo de carga)
+  nginx:
+    image: nginx:latest
+    container_name: nginx-taller
+    ports:
+      - "80:80"
+      - "443:443"
+    volumes:
+      - ./nginx/nginx.conf:/etc/nginx/nginx.conf:ro
+      - ./nginx/comedia.js:/etc/nginx/njs/comedia.js:ro
+      - ./nginx/postdata.log:/var/log/nginx/postdata.log
+      - ./nginx/mycert.pem:/etc/nginx/ssl/mycert.pem:ro
+      - ./nginx/mykey.pem:/etc/nginx/ssl/mykey.pem:ro
+    depends_on:
+      - apigateway1
+      - apigateway2
+      - apigateway3
+
+
+networks:
+  app-net:
+    driver: bridge
+
+volumes:
+  auth-db-data:
+  bill-db-data:
+  users-db-data:
+  videos-db-data:
+  interactions-db-data:
+  logs-db-data:

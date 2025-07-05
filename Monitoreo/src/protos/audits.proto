@@ -1,0 +1,38 @@
+syntax = "proto3";
+
+package audits;
+
+service Audits{
+  rpc ListActions(EmptyRequest) returns (ActionListResponse);
+  rpc ListErrors(EmptyRequest) returns (ErrorListResponse);
+}
+
+message EmptyRequest {
+  string token = 1;
+}
+
+message Action {
+  string id = 1;
+  string userId = 2;
+  string email = 3;
+  string method = 4;
+  string url = 5;
+  string date = 6;
+  string action = 7;
+}
+
+message ErrorEntry {
+  string id = 1;
+  string userId = 2;
+  string email = 3;
+  string date = 4;
+  string error = 5;
+}
+
+message ActionListResponse {
+  repeated Action actions = 1;
+}
+
+message ErrorListResponse {
+  repeated ErrorEntry errors = 1;
+}

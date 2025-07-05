@@ -1,0 +1,54 @@
+syntax = "proto3";
+
+package videos;
+
+service Videos {
+  rpc GetAllVideos (Empty) returns (VideoList);
+  rpc GetVideoById (GetVideoByIdRequest) returns (Video);
+  rpc CreateVideo (CreateVideoRequest) returns (Video);
+  rpc UpdateVideo (UpdateVideoRequest) returns (Video);
+  rpc DeleteVideo (DeleteVideoRequest) returns (DeleteVideoResponse);
+}
+
+message Empty {}
+
+message Video {
+  string id = 1;
+  string title = 2;
+  string description = 3;
+  string genre = 4;
+  bool available = 5;
+  int32 likes = 6;
+}
+
+message VideoList {
+  repeated Video videos = 1;
+}
+
+message GetVideoByIdRequest {
+  string id = 1;
+}
+
+message CreateVideoRequest {
+  string title = 1;
+  string description = 2;
+  string genre = 3;
+  string requesterRole = 4;
+}
+
+message UpdateVideoRequest {
+  string id = 1;
+  string title = 2;
+  string description = 3;
+  string genre = 4;
+  string requesterRole = 5;
+}
+
+message DeleteVideoRequest {
+  string id = 1;
+  string requesterRole = 2;
+}
+
+message DeleteVideoResponse {
+  string message = 1;
+}

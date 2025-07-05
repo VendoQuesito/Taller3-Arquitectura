@@ -1,0 +1,40 @@
+syntax = "proto3";
+
+package interactions;
+
+service Interactions {
+  rpc GiveLike (LikeRequest) returns (InteractionResponse);
+  rpc LeaveComment (CommentRequest) returns (InteractionResponse);
+  rpc GetInteractions (VideoRequest) returns (InteractionsResponse);
+}
+
+message LikeRequest {
+  string videoId = 1;
+  string userId = 2;
+}
+
+message CommentRequest {
+  string videoId = 1;
+  string userId = 2;
+  string comment = 3;
+}
+
+message VideoRequest {
+  string videoId = 1;
+  string userId = 2;
+}
+
+message InteractionResponse {
+  string message = 1;
+}
+
+message InteractionsResponse {
+  repeated string likes = 1;
+  repeated Comment comments = 2;
+}
+
+message Comment {
+  string userId = 1;
+  string comment = 2;
+  string date = 3;
+}

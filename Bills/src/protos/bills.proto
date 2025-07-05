@@ -1,0 +1,58 @@
+syntax = "proto3";
+
+package bills;
+
+service Bills {
+  rpc CreateBill (CreateBillRequest) returns (Bill);
+  rpc GetBillById (GetBillByIdRequest) returns (Bill);
+  rpc GetBills (GetBillsRequest) returns (GetBillsResponse);
+  rpc DeleteBill (DeleteBillRequest) returns (DeleteBillResponse);
+  rpc UpdateBillState (UpdateBillStateRequest) returns (Bill);
+}
+
+message CreateBillRequest {
+  string userId = 1;
+  string state = 2;
+  int32 quantity = 3;
+  string role = 4;
+}
+
+message GetBillByIdRequest {
+  int32 id = 1;
+  string userId = 2;
+  string role = 3;
+}
+
+message GetBillsRequest {
+  string state = 1;
+  string userId = 2;
+  string role = 3;
+}
+
+message DeleteBillRequest {
+  int32 id = 1;
+  string role = 2;
+}
+
+message DeleteBillResponse {
+  string message = 1;
+}
+
+message UpdateBillStateRequest {
+  int32 id = 1;
+  string state = 2;
+  string role = 3;
+}
+
+message Bill {
+  int32 id = 1;
+  string state = 2;
+  string userId = 3;
+  int32 quantity = 4;
+  string issueDate = 5;
+  string paidDate = 6;
+}
+
+message GetBillsResponse {
+  repeated Bill bills = 1;
+}
