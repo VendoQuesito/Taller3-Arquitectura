@@ -1,3 +1,4 @@
+const { decodeToken } = require("../middlewares/decodeToken");
 const { Router } = require("express");
 const {
   getUsers,
