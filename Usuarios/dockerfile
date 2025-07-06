@@ -1,23 +1,20 @@
-# Imagen base oficial de Node.js
-FROM node:20
+FROM node:18-alpine
 
-# Establece el directorio de trabajo dentro del contenedor
 WORKDIR /app
 
-# Copia los archivos del proyecto al contenedor
-COPY . .
-
-# Instala las dependencias del proyecto
+COPY package*.json ./
 RUN npm install
 
-# Genera el cliente de Prisma
+COPY prisma ./prisma
+COPY src ./src
+
+# Generar cliente Prisma
 RUN npx prisma generate --schema=prisma/mariadb/schema.prisma
 
-# Realiza el push de la base de datos
-# RUN npx prisma db push --schema=prisma/mariadb/schema.prisma
+# Copiar entrypoint y darle permisos
+COPY entrypoint.sh /usr/local/bin/entrypoint.sh
+RUN chmod +x /usr/local/bin/entrypoint.sh
 
-# Expone el puerto donde corre la aplicación
-EXPOSE 3003
+ENTRYPOINT ["entrypoint.sh"]
 
-# Comando para iniciar la app
 CMD ["npm", "start"]

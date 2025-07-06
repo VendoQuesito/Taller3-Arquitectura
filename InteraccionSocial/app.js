@@ -12,7 +12,7 @@ const environments = {
 config({ path: "./.env" });
 
 
-const DB = process.env.MONGO_DATABASE2.replace(
+const DB = process.env.MONGO_DATABASE.replace(
     "<PASSWORD>",
     process.env.MONGO_PASSWORD
   ).replace("<USER>", process.env.MONGO_USER);

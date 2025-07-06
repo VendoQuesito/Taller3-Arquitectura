@@ -154,7 +154,6 @@ services:
       JWT_SECRET: amongus
       MONGO_PASSWORD: "root@"
       MONGO_USER: "admin:"
-      MONGO_DATABASE2: "mongodb://localhost:27017/"
       SERVER_URL: "interacciones"
     ports:
       - "3004:3004"
@@ -173,7 +172,7 @@ services:
       MONGO_DATABASE: "mongodb://admin:root@mongodb-logs:27018/db?authSource=admin"
       MONGO_PASSWORD: "root@"
       MONGO_USER: "admin:"
-      SERVER_URL: environment
+      SERVER_URL: "logs"
     ports:
       - "3006:3006"
 
@@ -181,39 +180,71 @@ services:
   apigateway1:
     build: ./Gateway
     container_name: apigateway1
-    environment:
-      - PORT=3001
     # volumes:
     #   - ./proto:/proto
+    ports:
+      - "3001:3001" 
     depends_on:
-      - auth
-      - usuarios
-      - videos
-
+    - usuarios
+    - auth
+    - interacciones
+    - facturacion
+    - videos
+    environment:
+      PORT: 3001
+      NODE_ENV: development
+      JWT_SECRET: amongus
+      VIDEOS_SERVICE_URL: videos:3000
+      AUTH_SERVICE_URL: auth:3002
+      USERS_SERVICE_URL: usuarios:3003
+      INTERACTIONS_SERVICE_URL: interacciones:3004
+      BILLS_SERVICE_URL: facturacion:3005
 
   apigateway2:
     build: ./Gateway
     container_name: apigateway2
-    environment:
-      - PORT=3008
     # volumes:
     #   - ./proto:/proto
+    ports:
+      - "3008:3008" 
     depends_on:
-      - auth
-      - usuarios
-      - videos
+    - usuarios
+    - auth
+    - interacciones
+    - facturacion
+    - videos
+    environment:
+      PORT: 3008
+      NODE_ENV: development
+      JWT_SECRET: amongus
+      VIDEOS_SERVICE_URL: videos:3000
+      AUTH_SERVICE_URL: auth:3002
+      USERS_SERVICE_URL: usuarios:3003
+      INTERACTIONS_SERVICE_URL: interacciones:3004
+      BILLS_SERVICE_URL: facturacion:3005
 
   apigateway3:
     build: ./Gateway
     container_name: apigateway3
-    environment:
-      - PORT=3009
     # volumes:
     #   - ./proto:/proto
+    ports:
+      - "3009:3009" 
     depends_on:
-      - auth
-      - usuarios
-      - videos
+    - usuarios
+    - auth
+    - interacciones
+    - facturacion
+    - videos
+    environment:
+      PORT: 3009
+      NODE_ENV: development
+      JWT_SECRET: amongus
+      VIDEOS_SERVICE_URL: videos:3000
+      AUTH_SERVICE_URL: auth:3002
+      USERS_SERVICE_URL: usuarios:3003
+      INTERACTIONS_SERVICE_URL: interacciones:3004
+      BILLS_SERVICE_URL: facturacion:3005
 
 
   # NGINX (balanceo de carga)

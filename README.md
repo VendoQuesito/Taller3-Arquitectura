@@ -4,20 +4,20 @@ Este es el Taller N3 de arquitectura de sistemas que son los microservicios y AP
 
 ---
 
-## Tecnologías utilizadas
+## Herramientas
 
-| Componente            | Tecnología                   |
-| --------------------- | ----------------------------- |
-| Lenguaje principal    | Node.js                       |
-| API Gateway           | Express + NGINX               |
-| Microservicios        | Express (Node.js)             |
-| Bases de datos        | MongoDB, MariaDB, PostgreSQL  |
-| ORM                   | Prisma                        |
-| Comunicación interna | HTTP vía NGINX / API Gateway |
-| Autenticación        | JWT                           |
-| Contenerización      | Docker, Docker Compose        |
-| CI/CD                 | GitHub Actions                |
-| Testing E2E           | Jest + Supertest              |
+| Componente            | Tecnología                                    |
+| --------------------- | ---------------------------------------------- |
+| Lenguaje principal    | Node.js                                        |
+| API Gateway           | Express + NGINX                                |
+| Microservicios        | Express (Node.js)                              |
+| Bases de datos        | MongoDB, MariaDB, PostgreSQL                   |
+| ORM                   | Prisma                                         |
+| Comunicación interna | HTTP vía NGINX / API Gateway<br />MS por GRPC |
+| Autenticación        | JWT                                            |
+| Contenerización      | Docker, Docker Compose                         |
+| CI/CD                 | GitHub Actions                                 |
+| Testing E2E           | Jest + Supertest                               |
 
 ---
 
