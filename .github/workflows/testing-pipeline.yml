@@ -1,0 +1,47 @@
+name: E2E Tests - API Gateway (Usuarios)
+
+on:
+  push:
+    branches:
+      - main
+    paths:
+      - 'Gateway/**'
+      - '.github/workflows/testing-pipeline.yml'
+
+jobs:
+  e2e-tests:
+    runs-on: ubuntu-latest
+    env:
+      PORT: 3001
+      NODE_ENV: development
+      USERS_SERVICE_URL: "http://localhost:3003"
+      AUTH_SERVICE_URL: "http://localhost:3002"
+
+    steps:
+      - name: Checkout repositorio
+        uses: actions/checkout@v3
+
+      - name: Start Docker Compose stack
+        run: docker compose up -d --build
+
+      - name: Esperar a que los servicios estén listos
+        run: |
+          echo "Esperando servicios..."
+          sleep 25
+
+      - name: Instalar dependencias en Gateway
+        working-directory: Gateway
+        run: npm install
+
+      - name: Ejecutar pruebas desde Gateway
+        working-directory: Gateway
+        run: npm test
+        env:
+          PORT: ${{ env.PORT }}
+          NODE_ENV: ${{ env.NODE_ENV }}
+          USERS_SERVICE_URL: ${{ env.USERS_SERVICE_URL }}
+          AUTH_SERVICE_URL: ${{ env.AUTH_SERVICE_URL }}
+
+      - name: Apagar contenedores
+        if: always()
+        run: docker compose down
