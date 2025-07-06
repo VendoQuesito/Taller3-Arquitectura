@@ -7,6 +7,8 @@ WORKDIR /app
 # Copiar todos los archivos del proyecto al contenedor
 COPY . .
 
+RUN apt-get update && apt-get install -y netcat
+
 # Instalar dependencias del proyecto
 RUN npm install
 
