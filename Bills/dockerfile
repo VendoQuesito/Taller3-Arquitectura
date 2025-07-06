@@ -13,7 +13,7 @@ RUN npm install
 # Genera los clientes Prisma para ambos esquemas
 RUN npx prisma generate --schema=prisma/mariadbBill/schema.prisma
 
-RUN apt-get update && apt-get install -y netcat
+RUN apt-get update && apt-get install -y netcat-openbsd
 
 # Aplica las migraciones (db push) para ambas bases de datos
 # RUN npx prisma db push --schema=prisma/mariadbBill/schema.prisma

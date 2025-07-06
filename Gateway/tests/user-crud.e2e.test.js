@@ -11,7 +11,8 @@ describe('E2E Usuarios - API Gateway', () => {
       lastName: "tester",
       email: "test.com",
       password: "1234567",
-      confirmPassword: "1234567"
+      confirmPassword: "1234567",
+      rol: "Cliente"
     });
     expect(res.statusCode).toBe(201);
     userId = res.body.id;
@@ -23,7 +24,8 @@ describe('E2E Usuarios - API Gateway', () => {
       lastName: "tester",
       email: "test.com",
       password: "1234567",
-      confirmPassword: "1234567"
+      confirmPassword: "1234567",
+      rol: "Cliente"
     });
     expect(res.statusCode).toBe(400);
   });

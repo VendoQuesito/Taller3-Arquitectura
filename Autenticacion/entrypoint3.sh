@@ -3,7 +3,7 @@
 echo "Esperando a que las bases de datos estén disponibles..."
 
 # Esperar a que MariaDB (puerto 3306) esté lista
-until nc -z mariadb-auth 3306; do
+until nc -z mariadb-users 3306; do
   echo "Esperando a MariaDB (mariadb-auth:3306)..."
   sleep 2
 done

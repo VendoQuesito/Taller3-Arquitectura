@@ -116,7 +116,7 @@ services:
       NODE_ENV: development
       JWT_SECRET: amongus
       SERVER_URL: facturacion
-      DATABASE_URL_2: "mysql://root:rootpassword@mariadb-bill:3307/bill-db"
+      DATABASE_URL_2: "mysql://root:rootpassword@mariadb-bill:3306/bill-db"
     ports:
     - "3005:3005"
 
@@ -148,7 +148,7 @@ services:
     # volumes:
     #   - ./proto:/proto
     environment:
-      MONGO_DATABASE: "mongodb://admin:root@mongodb-interactions:27019/db?authSource=admin"
+      MONGO_DATABASE: "mongodb://admin:root@mongodb-interactions:27017/db?authSource=admin"
       PORT: 3004
       NODE_ENV: development
       JWT_SECRET: amongus
@@ -169,7 +169,7 @@ services:
       PORT: 3006
       NODE_ENV: development
       JWT_SECRET: amongus
-      MONGO_DATABASE: "mongodb://admin:root@mongodb-logs:27018/db?authSource=admin"
+      MONGO_DATABASE: "mongodb://admin:root@mongodb-logs:27017/db?authSource=admin"
       MONGO_PASSWORD: "root@"
       MONGO_USER: "admin:"
       SERVER_URL: "logs"
