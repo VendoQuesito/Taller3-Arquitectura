@@ -21,5 +21,10 @@ RUN npx prisma generate --schema=prisma/mariadb/schema.prisma \
 # Exponer el puerto en el que corre la aplicación
 EXPOSE 3002
 
-# Comando por defecto para ejecutar la aplicación
+# Copiar entrypoint y darle permisos
+COPY entrypoint.sh /usr/local/bin/entrypoint3.sh
+RUN chmod +x /usr/local/bin/entrypoint3.sh
+
+ENTRYPOINT ["entrypoint3.sh"]
+
 CMD ["npm", "start"]
