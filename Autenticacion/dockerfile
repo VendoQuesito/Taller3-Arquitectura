@@ -22,7 +22,7 @@ RUN npx prisma generate --schema=prisma/mariadb/schema.prisma \
 EXPOSE 3002
 
 # Copiar entrypoint y darle permisos
-COPY entrypoint.sh /usr/local/bin/entrypoint3.sh
+COPY entrypoint3.sh /usr/local/bin/entrypoint3.sh
 RUN chmod +x /usr/local/bin/entrypoint3.sh
 
 ENTRYPOINT ["entrypoint3.sh"]
